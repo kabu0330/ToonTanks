@@ -7,6 +7,7 @@
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include <DrawDebugHelpers.h>
 
 ATank::ATank()
 {
@@ -24,13 +25,31 @@ ATank::~ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 void ATank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	UGameplayStatics::GetWorldDeltaSeconds(this);
+	if (PC)
+	{
+		FHitResult HitResult;
+		PC->GetHitResultUnderCursor(
+			ECollisionChannel::ECC_Visibility, 
+			false, 
+			HitResult);
+
+		RotateTurret(HitResult.ImpactPoint);
+
+		DrawDebugSphere(
+			GetWorld(),
+			HitResult.ImpactPoint,
+			25.0f,
+			12,
+			FColor::Red,
+			false);
+	}
 }
 
 // Called to bind functionality to input
@@ -38,9 +57,10 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	UEnhancedInputComponent* Enhanced = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
-	
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+
+	PC = Cast<APlayerController>(GetController());
+	if (PC)
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = 
 			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
@@ -49,8 +69,8 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		}
 	}
 
-	Enhanced->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATank::Move);
-	Enhanced->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATank::Turn);
+	EnhancedInput->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATank::Move);
+	EnhancedInput->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATank::Turn);
 
 }
 
@@ -73,7 +93,7 @@ void ATank::Turn(const FInputActionValue& Value)
 	float TurnValue = Value.Get<float>();
 	Rotation.Yaw = TurnValue * TurnSpeed * DeltaTime;
 
-	TurretMesh->AddLocalRotation(Rotation);
+	AddActorLocalRotation(Rotation);
 
 	FString Str = Rotation.ToString();
 	UE_LOG(LogTemp, Warning, TEXT("Turn Speed : %s"), *Str);

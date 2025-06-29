@@ -54,4 +54,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float TurnSpeed = 200.0f;
+
+	APlayerController* PC;
 };
