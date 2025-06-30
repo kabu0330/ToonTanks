@@ -41,14 +41,6 @@ void ATank::Tick(float DeltaTime)
 			HitResult);
 
 		RotateTurret(HitResult.ImpactPoint);
-
-		DrawDebugSphere(
-			GetWorld(),
-			HitResult.ImpactPoint,
-			25.0f,
-			12,
-			FColor::Red,
-			false);
 	}
 }
 
@@ -71,6 +63,7 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	EnhancedInput->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATank::Move);
 	EnhancedInput->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATank::Turn);
+	EnhancedInput->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATank::Fire);
 
 }
 

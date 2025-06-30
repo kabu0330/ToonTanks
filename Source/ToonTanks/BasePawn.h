@@ -20,6 +20,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 	void RotateTurret(FVector LookAtTarget);
+	void Fire();
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
@@ -35,7 +36,8 @@ protected:
 	USceneComponent* ProjectileSpawnPoint;
 
 private:
-
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<class AProjectile> ProjectileClass;
 
 public:	
 	// Called every frame
