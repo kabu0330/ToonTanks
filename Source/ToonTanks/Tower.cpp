@@ -20,7 +20,12 @@ void ATower::BeginPlay()
 
 	Tank = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 
-	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true);
+	GetWorldTimerManager().SetTimer(
+		FireRateTimerHandle, 
+		this, 
+		&ATower::CheckFireCondition, 
+		FireRate, 
+		true);
 }
 
 void ATower::Tick(float DeltaTime)
@@ -31,6 +36,12 @@ void ATower::Tick(float DeltaTime)
 	{
 		RotateTurret(Tank->GetActorLocation());
 	}
+}
+
+void ATower::HandleDestruction()
+{
+	Super::HandleDestruction();
+	Destroy();
 }
 
 void ATower::CheckFireCondition()

@@ -18,6 +18,8 @@ public:
 	ATower();
 	~ATower();
 
+	virtual void HandleDestruction() override;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;

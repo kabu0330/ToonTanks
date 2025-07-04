@@ -27,5 +27,18 @@ private:
 	//class UCapsuleComponent* CapsuleComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* BaseMesh;
+	class UStaticMeshComponent* ProjectileMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	class UProjectileMovementComponent* ProjectileMovementComp;
+
+	//                           발사체 메시,         충돌 당하는 액터,    충돌 당하는 컴포넌트,         임펄스 방향과 크기,   충돌관련 정보 구조체   
+	UFUNCTION()
+	void OnHit(
+		UPrimitiveComponent* HitComp, AActor* OtherActor, 
+		UPrimitiveComponent* OtherComp, FVector NormalImpulse, 
+		const FHitResult& Hit);
+	
+	UPROPERTY(EditAnywhere)
+	float Damage = 50.f;
 };
