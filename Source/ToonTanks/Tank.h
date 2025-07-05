@@ -29,6 +29,8 @@ public:
 
 	APlayerController* GetTankPlayerController() const { return PC; }
 
+	bool bAlive = true;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
